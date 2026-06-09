@@ -1,0 +1,39 @@
+"""
+Password Utilities
+
+Contains helper functions for:
+- Hashing passwords
+- Verifying passwords
+"""
+
+from passlib.context import CryptContext
+
+# Configure bcrypt hashing
+pwd_context = CryptContext(
+    schemes=["bcrypt"],
+    deprecated="auto"
+)
+
+
+def hash_password(password: str) -> str:
+    """
+    Convert plain text password
+    into a secure hash.
+    """
+
+    return pwd_context.hash(password)
+
+
+def verify_password(
+    plain_password: str,
+    hashed_password: str
+) -> bool:
+    """
+    Compare entered password
+    with stored hashed password.
+    """
+
+    return pwd_context.verify(
+        plain_password,
+        hashed_password
+    )
