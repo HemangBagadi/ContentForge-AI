@@ -28,3 +28,15 @@ class UserLogin(BaseModel):
     email: EmailStr
 
     password: str
+
+
+class ContentRequest(BaseModel):
+    """
+    Model used for content generation.
+    """
+
+    topic: str = Field(
+        ...,
+        min_length=5,
+        max_length=500
+    )
