@@ -27,3 +27,5 @@ db = client["contentforge_ai"]
 users_collection = db["users"]
 
 content_collection = db["contents"]
+
+content_collection = db["content_history"]

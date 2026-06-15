@@ -6,7 +6,7 @@ used throughout the application.
 """
 
 from pydantic import BaseModel, EmailStr, Field
-
+from datetime import datetime
 
 class UserSignup(BaseModel):
     """
@@ -40,3 +40,10 @@ class ContentRequest(BaseModel):
         min_length=5,
         max_length=500
     )
+    
+class ContentHistory:
+    """
+    Structure of saved content.
+    """
+
+    pass
