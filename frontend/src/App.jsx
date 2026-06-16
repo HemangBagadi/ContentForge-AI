@@ -1,10 +1,37 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
+import DashboardPage from "./pages/DashboardPage";
+import HistoryPage from "./pages/HistoryPage";
+
 function App() {
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <h1 className="text-4xl font-bold">
-        ContentForge AI
-      </h1>
-    </div>
+    <BrowserRouter>
+      <Routes>
+
+        <Route
+          path="/"
+          element={<LoginPage />}
+        />
+
+        <Route
+          path="/signup"
+          element={<SignupPage />}
+        />
+
+        <Route
+          path="/dashboard"
+          element={<DashboardPage />}
+        />
+
+        <Route
+          path="/history"
+          element={<HistoryPage />}
+        />
+
+      </Routes>
+    </BrowserRouter>
   );
 }
 
