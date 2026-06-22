@@ -1,5 +1,5 @@
-import { useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useContext, useEffect } from "react";
+import { useNavigate, Link } from "react-router-dom";
 
 import api from "../api/api";
 import { AuthContext } from "../context/AuthContext";
@@ -11,6 +11,23 @@ function LoginPage() {
   const { login } = useContext(
     AuthContext
   );
+
+  useEffect(() => {
+
+    const token =
+      localStorage.getItem(
+        "token"
+      );
+
+    if (token) {
+
+      navigate(
+        "/dashboard"
+      );
+
+    }
+
+  }, [navigate]);
 
   const [formData, setFormData] =
     useState({
@@ -63,46 +80,139 @@ function LoginPage() {
   };
 
   return (
-    <div>
 
-      <h1>Login</h1>
+    <div
+      className="
+        min-h-screen
+        flex
+        items-center
+        justify-center
+        bg-slate-100
+      "
+    >
 
-      <form
-        onSubmit={handleSubmit}
+      <div
+        className="
+          bg-white
+          p-8
+          rounded-xl
+          shadow-lg
+          w-full
+          max-w-md
+        "
       >
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+        <h1
+          className="
+            text-3xl
+            font-bold
+            text-center
+            mb-2
+          "
+        >
+          ContentForge AI
+        </h1>
 
-        <br />
-        <br />
+        <p
+          className="
+            text-center
+            text-gray-500
+            mb-6
+          "
+        >
+          Login to your account
+        </p>
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+        <form
+          onSubmit={handleSubmit}
+        >
 
-        <br />
-        <br />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="
+              w-full
+              border
+              rounded-lg
+              p-3
+              mb-4
+            "
+          />
 
-        <button type="submit">
-          Login
-        </button>
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="
+              w-full
+              border
+              rounded-lg
+              p-3
+              mb-4
+            "
+          />
 
-      </form>
+          <button
+            type="submit"
+            className="
+              w-full
+              bg-blue-600
+              text-white
+              p-3
+              rounded-lg
+              hover:bg-blue-700
+            "
+          >
+            Login
+          </button>
 
-      <p>{message}</p>
+        </form>
+
+        {message && (
+
+          <p
+            className="
+              text-red-500
+              mt-4
+              text-center
+            "
+          >
+            {message}
+          </p>
+
+        )}
+
+        <p
+          className="
+            text-center
+            mt-6
+          "
+        >
+          Don't have an account?{" "}
+
+          <Link
+            to="/signup"
+            className="
+              text-blue-600
+              font-semibold
+            "
+          >
+            Sign Up
+          </Link>
+
+        </p>
+
+      </div>
 
     </div>
+
   );
+
 }
 
 export default LoginPage;

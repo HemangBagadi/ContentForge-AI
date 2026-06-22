@@ -1,39 +1,46 @@
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+
 import api from "../api/api";
 
 function SignupPage() {
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: ""
-  });
+  const navigate = useNavigate();
 
-  const [message, setMessage] = useState("");
+  const [formData, setFormData] =
+    useState({
+      name: "",
+      email: "",
+      password: ""
+    });
+
+  const [message, setMessage] =
+    useState("");
 
   const handleChange = (event) => {
 
     setFormData({
       ...formData,
-      [event.target.name]: event.target.value
+      [event.target.name]:
+        event.target.value
     });
 
   };
 
-  const handleSubmit = async (event) => {
+  const handleSubmit = async (
+    event
+  ) => {
 
     event.preventDefault();
 
     try {
 
-      const response = await api.post(
+      await api.post(
         "/signup",
         formData
       );
 
-      setMessage(
-        response.data.message
-      );
+      navigate("/");
 
     } catch (error) {
 
@@ -47,55 +54,154 @@ function SignupPage() {
   };
 
   return (
-    <div>
 
-      <h1>Signup</h1>
+    <div
+      className="
+        min-h-screen
+        flex
+        items-center
+        justify-center
+        bg-slate-100
+      "
+    >
 
-      <form onSubmit={handleSubmit}>
+      <div
+        className="
+          bg-white
+          p-8
+          rounded-xl
+          shadow-lg
+          w-full
+          max-w-md
+        "
+      >
 
-        <input
-          type="text"
-          name="name"
-          placeholder="Name"
-          value={formData.name}
-          onChange={handleChange}
-        />
+        <h1
+          className="
+            text-3xl
+            font-bold
+            text-center
+            mb-2
+          "
+        >
+          ContentForge AI
+        </h1>
 
-        <br />
-        <br />
+        <p
+          className="
+            text-center
+            text-gray-500
+            mb-6
+          "
+        >
+          Create your account
+        </p>
 
-        <input
-          type="email"
-          name="email"
-          placeholder="Email"
-          value={formData.email}
-          onChange={handleChange}
-        />
+        <form
+          onSubmit={handleSubmit}
+        >
 
-        <br />
-        <br />
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={formData.name}
+            onChange={handleChange}
+            className="
+              w-full
+              border
+              rounded-lg
+              p-3
+              mb-4
+            "
+          />
 
-        <input
-          type="password"
-          name="password"
-          placeholder="Password"
-          value={formData.password}
-          onChange={handleChange}
-        />
+          <input
+            type="email"
+            name="email"
+            placeholder="Email"
+            value={formData.email}
+            onChange={handleChange}
+            className="
+              w-full
+              border
+              rounded-lg
+              p-3
+              mb-4
+            "
+          />
 
-        <br />
-        <br />
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            className="
+              w-full
+              border
+              rounded-lg
+              p-3
+              mb-4
+            "
+          />
 
-        <button type="submit">
-          Sign Up
-        </button>
+          <button
+            type="submit"
+            className="
+              w-full
+              bg-green-600
+              text-white
+              p-3
+              rounded-lg
+              hover:bg-green-700
+            "
+          >
+            Create Account
+          </button>
 
-      </form>
+        </form>
 
-      <p>{message}</p>
+        {message && (
+
+          <p
+            className="
+              text-red-500
+              mt-4
+              text-center
+            "
+          >
+            {message}
+          </p>
+
+        )}
+
+        <p
+          className="
+            text-center
+            mt-6
+          "
+        >
+          Already have an account?{" "}
+
+          <Link
+            to="/"
+            className="
+              text-blue-600
+              font-semibold
+            "
+          >
+            Login
+          </Link>
+
+        </p>
+
+      </div>
 
     </div>
+
   );
+
 }
 
 export default SignupPage;

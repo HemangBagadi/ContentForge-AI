@@ -14,11 +14,30 @@ function HistoryPage() {
   const [selectedContent, setSelectedContent] =
     useState(null);
 
+  const [notification, setNotification] =
+    useState("");
+
   useEffect(() => {
 
     fetchHistory();
 
   }, []);
+
+  useEffect(() => {
+
+    if (!notification) return;
+
+    const timer =
+      setTimeout(() => {
+
+        setNotification("");
+
+      }, 3000);
+
+    return () =>
+      clearTimeout(timer);
+
+  }, [notification]);
 
   const fetchHistory =
     async () => {
@@ -28,13 +47,18 @@ function HistoryPage() {
       try {
 
         const response =
-          await api.get(
-            "/content-history"
-          );
-
-        setContents(
-          response.data
+        await api.get(
+          "/content-history"
         );
+
+      console.log(
+        "HISTORY RESPONSE:",
+        response.data
+      );
+
+      setContents(
+        response.data
+      );
 
       } catch (error) {
 
@@ -85,8 +109,16 @@ function HistoryPage() {
           selectedContent &&
           selectedContent.id === contentId
         ) {
-          setSelectedContent(null);
+
+          setSelectedContent(
+            null
+          );
+
         }
+
+        setNotification(
+          "Content deleted successfully!"
+        );
 
       } catch (error) {
 
@@ -105,7 +137,7 @@ function HistoryPage() {
           selectedContent.generated_content
         );
 
-        alert(
+        setNotification(
           "Content copied successfully!"
         );
 
@@ -127,6 +159,21 @@ function HistoryPage() {
     >
 
       <Navbar />
+
+      {notification && (
+
+        <div
+          className="
+            bg-green-500
+            text-white
+            text-center
+            py-3
+          "
+        >
+          {notification}
+        </div>
+
+      )}
 
       <div
         className="
