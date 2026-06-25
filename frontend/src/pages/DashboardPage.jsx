@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 
+import { jsPDF } from "jspdf";
 import Navbar from "../components/Navbar";
 import api from "../api/api";
 
@@ -19,6 +20,20 @@ function DashboardPage() {
 
   const [notification, setNotification] =
     useState("");
+  const [stats, setStats] =
+  useState({
+
+    total: 0,
+
+    linkedin: 0,
+
+    twitter: 0,
+
+    instagram: 0,
+
+    blog: 0
+
+  });
 
   const [tone, setTone] =
   useState("professional");
@@ -38,6 +53,33 @@ function DashboardPage() {
       clearTimeout(timer);
 
   }, [notification]);
+  useEffect(() => {
+
+  fetchStats();
+
+}, []);
+
+const fetchStats =
+  async () => {
+
+    try {
+
+      const response =
+        await api.get(
+          "/dashboard-stats"
+        );
+
+      setStats(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
 
   const generateContent =
     async () => {
@@ -68,6 +110,8 @@ function DashboardPage() {
         setContent(
           response.data.content
         );
+
+        fetchStats();
 
         setNotification(
           "Content generated successfully!"
@@ -137,6 +181,81 @@ function DashboardPage() {
     }
 
   };
+  const downloadTxt =
+  () => {
+
+    if (!content) {
+
+      setNotification(
+        "No content available."
+      );
+
+      return;
+
+    }
+
+    const blob =
+      new Blob(
+        [content],
+        {
+          type: "text/plain"
+        }
+      );
+
+    const url =
+      window.URL.createObjectURL(
+        blob
+      );
+
+    const link =
+      document.createElement(
+        "a"
+      );
+
+    link.href = url;
+
+    link.download =
+      `${contentType}-content.txt`;
+
+    link.click();
+
+    window.URL.revokeObjectURL(
+      url
+    );
+
+  };
+  const downloadPdf = () => {
+
+  if (!content) {
+
+    setNotification(
+      "No content available."
+    );
+
+    return;
+
+  }
+
+  const pdf = new jsPDF();
+
+  pdf.setFontSize(14);
+
+  const lines = pdf.splitTextToSize(
+    content,
+    180
+  );
+
+  pdf.text(
+    lines,
+    15,
+    20
+  );
+
+  pdf.save(
+    `${contentType}-content.pdf`
+  );
+
+};
 
   return (
 
@@ -149,6 +268,69 @@ function DashboardPage() {
     >
 
       <Navbar />
+      <div
+  className="
+    max-w-6xl
+    mx-auto
+    grid
+    grid-cols-2
+    md:grid-cols-5
+    gap-4
+    p-6
+  "
+>
+
+  <div className="bg-blue-600 text-white rounded-lg p-4 text-center">
+    <h3 className="text-lg font-bold">
+      Total
+    </h3>
+
+    <p className="text-3xl">
+      {stats.total}
+    </p>
+  </div>
+
+  <div className="bg-indigo-600 text-white rounded-lg p-4 text-center">
+    <h3 className="text-lg font-bold">
+      LinkedIn
+    </h3>
+
+    <p className="text-3xl">
+      {stats.linkedin}
+    </p>
+  </div>
+
+  <div className="bg-black text-white rounded-lg p-4 text-center">
+    <h3 className="text-lg font-bold">
+      Twitter
+    </h3>
+
+    <p className="text-3xl">
+      {stats.twitter}
+    </p>
+  </div>
+
+  <div className="bg-pink-600 text-white rounded-lg p-4 text-center">
+    <h3 className="text-lg font-bold">
+      Instagram
+    </h3>
+
+    <p className="text-3xl">
+      {stats.instagram}
+    </p>
+  </div>
+
+  <div className="bg-green-600 text-white rounded-lg p-4 text-center">
+    <h3 className="text-lg font-bold">
+      Blog
+    </h3>
+
+    <p className="text-3xl">
+      {stats.blog}
+    </p>
+  </div>
+
+</div>
 
       {notification && (
 
@@ -386,6 +568,36 @@ function DashboardPage() {
       ? "Rewriting..."
       : "Rewrite Content"
   }
+</button>
+<button
+  onClick={downloadTxt}
+  className="
+    mt-3
+    ml-3
+    bg-green-600
+    text-white
+    px-5
+    py-2
+    rounded
+    hover:bg-green-700
+  "
+>
+  Download TXT
+</button>
+<button
+  onClick={downloadPdf}
+  className="
+    mt-3
+    ml-3
+    bg-red-600
+    text-white
+    px-5
+    py-2
+    rounded
+    hover:bg-red-700
+  "
+>
+  Download PDF
 </button>
 
           </div>

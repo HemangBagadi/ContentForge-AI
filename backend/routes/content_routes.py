@@ -68,6 +68,64 @@ def rewrite_generated_content(
         "content": rewritten_content
     }
 
+@router.get("/dashboard-stats")
+def dashboard_stats(
+    current_user=Depends(get_current_user)
+):
+    """
+    Dashboard analytics.
+    """
+
+    user_email = current_user["email"]
+
+    total = content_collection.count_documents(
+        {
+            "user_email": user_email
+        }
+    )
+
+    linkedin = content_collection.count_documents(
+        {
+            "user_email": user_email,
+            "content_type": "linkedin"
+        }
+    )
+
+    twitter = content_collection.count_documents(
+        {
+            "user_email": user_email,
+            "content_type": "twitter"
+        }
+    )
+
+    instagram = content_collection.count_documents(
+        {
+            "user_email": user_email,
+            "content_type": "instagram"
+        }
+    )
+
+    blog = content_collection.count_documents(
+        {
+            "user_email": user_email,
+            "content_type": "blog"
+        }
+    )
+
+    return {
+
+        "total": total,
+
+        "linkedin": linkedin,
+
+        "twitter": twitter,
+
+        "instagram": instagram,
+
+        "blog": blog
+
+    }
+
 
 @router.get("/content-history")
 def get_content_history(
