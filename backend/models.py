@@ -6,18 +6,25 @@ used throughout the application.
 """
 
 from pydantic import BaseModel, EmailStr, Field
-from datetime import datetime
+
 
 class UserSignup(BaseModel):
     """
     Model used when a user creates an account.
     """
 
-    name: str = Field(..., min_length=2, max_length=50)
+    name: str = Field(
+        ...,
+        min_length=2,
+        max_length=50
+    )
 
     email: EmailStr
 
-    password: str = Field(..., min_length=6)
+    password: str = Field(
+        ...,
+        min_length=6
+    )
 
 
 class UserLogin(BaseModel):
@@ -32,7 +39,7 @@ class UserLogin(BaseModel):
 
 class ContentRequest(BaseModel):
     """
-    Model used for content generation.
+    Model used for AI content generation.
     """
 
     topic: str = Field(
@@ -40,10 +47,26 @@ class ContentRequest(BaseModel):
         min_length=5,
         max_length=500
     )
-    
-class ContentHistory:
+
+    content_type: str = Field(
+        ...,
+        min_length=3,
+        max_length=50
+    )
+
+
+class RewriteRequest(BaseModel):
     """
-    Structure of saved content.
+    Model used to rewrite AI content.
     """
 
-    pass
+    content: str = Field(
+        ...,
+        min_length=10
+    )
+
+    tone: str = Field(
+        ...,
+        min_length=3,
+        max_length=30
+    )

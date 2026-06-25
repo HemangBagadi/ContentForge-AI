@@ -2,34 +2,39 @@
 Content Generation Routes
 """
 
-from fastapi import APIRouter, Depends
-from fastapi import APIRouter, Depends, HTTPException
 from datetime import datetime
+
 from bson import ObjectId
+from fastapi import APIRouter, Depends, HTTPException
+
 from database import content_collection
-from models import ContentRequest
+from models import ContentRequest, RewriteRequest
 from utils.auth_middleware import get_current_user
-from utils.gemini_client import generate_linkedin_post
+from utils.gemini_client import (
+    generate_content,
+    rewrite_content
+)
 
 router = APIRouter()
 
 
-@router.post("/generate-linkedin-post")
+@router.post("/generate-content")
 def generate_post(
     request: ContentRequest,
     current_user=Depends(get_current_user)
 ):
     """
-    Generate LinkedIn content.
+    Generate AI content.
     """
 
-    content = generate_linkedin_post(
-        request.topic
+    content = generate_content(
+        request.topic,
+        request.content_type
     )
 
     content_document = {
         "user_email": current_user["email"],
-        "content_type": "linkedin",
+        "content_type": request.content_type,
         "topic": request.topic,
         "generated_content": content,
         "created_at": datetime.utcnow()
@@ -42,6 +47,28 @@ def generate_post(
     return {
         "content": content
     }
+
+
+@router.post("/rewrite-content")
+def rewrite_generated_content(
+    request: RewriteRequest,
+    current_user=Depends(get_current_user)
+):
+    """
+    Rewrite generated content
+    in a selected tone.
+    """
+
+    rewritten_content = rewrite_content(
+        request.content,
+        request.tone
+    )
+
+    return {
+        "content": rewritten_content
+    }
+
+
 @router.get("/content-history")
 def get_content_history(
     current_user=Depends(get_current_user)
@@ -55,11 +82,15 @@ def get_content_history(
         {
             "user_email": current_user["email"]
         }
-    ).sort("created_at", -1)
+    ).sort(
+        "created_at",
+        -1
+    )
 
     result = []
 
     for content in contents:
+
         result.append(
             {
                 "id": str(content["_id"]),
@@ -71,6 +102,8 @@ def get_content_history(
         )
 
     return result
+
+
 @router.get("/content/{content_id}")
 def get_single_content(
     content_id: str,
@@ -88,6 +121,7 @@ def get_single_content(
     )
 
     if not content:
+
         raise HTTPException(
             status_code=404,
             detail="Content not found"
@@ -100,6 +134,8 @@ def get_single_content(
         "generated_content": content["generated_content"],
         "created_at": content["created_at"]
     }
+
+
 @router.delete("/content/{content_id}")
 def delete_content(
     content_id: str,
@@ -117,6 +153,7 @@ def delete_content(
     )
 
     if result.deleted_count == 0:
+
         raise HTTPException(
             status_code=404,
             detail="Content not found"

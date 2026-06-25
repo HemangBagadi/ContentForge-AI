@@ -13,6 +13,12 @@ function HistoryPage() {
 
   const [selectedContent, setSelectedContent] =
     useState(null);
+  
+  const [searchTerm, setSearchTerm] =
+  useState("");
+
+  const [filterType, setFilterType] =
+  useState("all");
 
   const [notification, setNotification] =
     useState("");
@@ -129,34 +135,56 @@ function HistoryPage() {
     };
 
   const copyContent =
-    async () => {
+  async () => {
 
-      try {
+    try {
 
-        await navigator.clipboard.writeText(
-          selectedContent.generated_content
+      await navigator.clipboard.writeText(
+        selectedContent.generated_content
+      );
+
+      setNotification(
+        "Content copied successfully!"
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+const filteredContents =
+  contents.filter((item) => {
+
+    const matchesSearch =
+      item.topic
+        .toLowerCase()
+        .includes(
+          searchTerm.toLowerCase()
         );
 
-        setNotification(
-          "Content copied successfully!"
-        );
+    const matchesType =
+      filterType === "all"
+        ? true
+        : item.content_type === filterType;
 
-      } catch (error) {
+    return (
+      matchesSearch &&
+      matchesType
+    );
 
-        console.log(error);
+  });
 
-      }
+return (
 
-    };
-
-  return (
-
-    <div
-      className="
-        min-h-screen
-        bg-slate-100
-      "
-    >
+  <div
+    className="
+      min-h-screen
+      bg-slate-100
+    "
+  >
 
       <Navbar />
 
@@ -192,6 +220,68 @@ function HistoryPage() {
         >
           Content History
         </h1>
+        <div
+  className="
+    grid
+    md:grid-cols-2
+    gap-4
+    mb-6
+  "
+>
+
+  <input
+    type="text"
+    placeholder="Search by topic..."
+    value={searchTerm}
+    onChange={(event) =>
+      setSearchTerm(
+        event.target.value
+      )
+    }
+    className="
+      border
+      rounded
+      p-3
+    "
+  />
+
+  <select
+    value={filterType}
+    onChange={(event) =>
+      setFilterType(
+        event.target.value
+      )
+    }
+    className="
+      border
+      rounded
+      p-3
+    "
+  >
+
+    <option value="all">
+      All Types
+    </option>
+
+    <option value="linkedin">
+      LinkedIn
+    </option>
+
+    <option value="twitter">
+      Twitter/X
+    </option>
+
+    <option value="instagram">
+      Instagram
+    </option>
+
+    <option value="blog">
+      Blog
+    </option>
+
+  </select>
+
+</div>
 
         {loading && (
 
@@ -202,20 +292,39 @@ function HistoryPage() {
         )}
 
         {!loading &&
-          contents.length === 0 && (
+  contents.length === 0 && (
 
-            <div
-              className="
-                bg-white
-                p-6
-                rounded-lg
-                shadow-md
-              "
-            >
-              No content found.
-            </div>
+    <div
+      className="
+        bg-white
+        p-8
+        rounded-lg
+        shadow-md
+        text-center
+      "
+    >
 
-        )}
+      <h2
+        className="
+          text-2xl
+          font-bold
+          mb-2
+        "
+      >
+        No Content Yet
+      </h2>
+
+      <p
+        className="
+          text-gray-500
+        "
+      >
+        Generate your first AI content from the Dashboard.
+      </p>
+
+    </div>
+
+)}
 
         <div
           className="
@@ -224,7 +333,7 @@ function HistoryPage() {
           "
         >
 
-          {contents.map(
+          {filteredContents.map(
             (item) => (
 
               <div
@@ -246,14 +355,30 @@ function HistoryPage() {
                   {item.topic}
                 </h3>
 
-                <p
-                  className="
-                    text-gray-500
-                    mb-4
-                  "
-                >
-                  {item.content_type}
-                </p>
+                <span
+  className={`
+    inline-block
+    px-3
+    py-1
+    rounded-full
+    text-white
+    text-sm
+    font-semibold
+    mb-4
+
+    ${
+      item.content_type === "linkedin"
+        ? "bg-blue-600"
+        : item.content_type === "twitter"
+        ? "bg-black"
+        : item.content_type === "instagram"
+        ? "bg-pink-600"
+        : "bg-green-600"
+    }
+  `}
+>
+  {item.content_type.toUpperCase()}
+</span>
 
                 <div
                   className="

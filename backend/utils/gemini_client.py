@@ -24,21 +24,107 @@ MODEL_NAME = os.getenv(
 )
 
 
-def generate_linkedin_post(topic: str) -> str:
+def generate_content(
+    topic: str,
+    content_type: str
+) -> str:
     """
-    Generate a professional LinkedIn post.
+    Generate AI content based on content type.
+    """
+
+    prompts = {
+
+        "linkedin": f"""
+        Write a professional LinkedIn post about:
+
+        {topic}
+
+        Requirements:
+        - Professional tone
+        - Engaging hook
+        - Clear structure
+        - Call to action
+        - Relevant hashtags
+        """,
+
+        "twitter": f"""
+        Write a Twitter/X post about:
+
+        {topic}
+
+        Requirements:
+        - Maximum 280 characters
+        - Catchy
+        - Include emojis
+        - Include hashtags
+        """,
+
+        "instagram": f"""
+        Write an Instagram caption about:
+
+        {topic}
+
+        Requirements:
+        - Friendly tone
+        - Storytelling style
+        - Include emojis
+        - Call to action
+        - Relevant hashtags
+        """,
+
+        "blog": f"""
+        Write a blog outline about:
+
+        {topic}
+
+        Requirements:
+        - Catchy title
+        - Introduction
+        - Main headings
+        - Bullet points
+        - Conclusion
+        """
+
+    }
+
+    prompt = prompts.get(
+        content_type.lower(),
+        prompts["linkedin"]
+    )
+
+    response = client.models.generate_content(
+        model=MODEL_NAME,
+        contents=prompt
+    )
+
+    return response.text
+
+
+def rewrite_content(
+    content: str,
+    tone: str
+) -> str:
+    """
+    Rewrite AI generated content
+    in a different tone.
     """
 
     prompt = f"""
-    Write a professional LinkedIn post about:
+    Rewrite the following content.
 
-    {topic}
+    Tone:
+    {tone}
+
+    Content:
+
+    {content}
 
     Requirements:
-    - Professional tone
-    - Engaging hook
-    - Clear structure
-    - Include call to action
+
+    - Keep the original meaning.
+    - Improve readability.
+    - Use the requested tone.
+    - Return only the rewritten content.
     """
 
     response = client.models.generate_content(
