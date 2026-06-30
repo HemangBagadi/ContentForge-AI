@@ -1,5 +1,9 @@
 import { useState, useEffect } from "react";
 
+import RecentActivity from "../components/RecentActivity";
+import GeneratedContent from "../components/GeneratedContent";
+import GenerateForm from "../components/GenerateForm";
+import AnalyticsCards from "../components/AnalyticsCards";
 import { jsPDF } from "jspdf";
 import Navbar from "../components/Navbar";
 import api from "../api/api";
@@ -34,6 +38,8 @@ function DashboardPage() {
     blog: 0
 
   });
+  const [recentContent, setRecentContent] =
+  useState([]);
 
   const [tone, setTone] =
   useState("professional");
@@ -57,6 +63,8 @@ function DashboardPage() {
 
   fetchStats();
 
+  fetchRecentContent();
+
 }, []);
 
 const fetchStats =
@@ -70,6 +78,28 @@ const fetchStats =
         );
 
       setStats(
+        response.data
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+
+  };
+
+  const fetchRecentContent =
+  async () => {
+
+    try {
+
+      const response =
+        await api.get(
+          "/recent-content"
+        );
+
+      setRecentContent(
         response.data
       );
 
@@ -112,6 +142,8 @@ const fetchStats =
         );
 
         fetchStats();
+
+        fetchRecentContent();
 
         setNotification(
           "Content generated successfully!"
@@ -268,69 +300,9 @@ const fetchStats =
     >
 
       <Navbar />
-      <div
-  className="
-    max-w-6xl
-    mx-auto
-    grid
-    grid-cols-2
-    md:grid-cols-5
-    gap-4
-    p-6
-  "
->
-
-  <div className="bg-blue-600 text-white rounded-lg p-4 text-center">
-    <h3 className="text-lg font-bold">
-      Total
-    </h3>
-
-    <p className="text-3xl">
-      {stats.total}
-    </p>
-  </div>
-
-  <div className="bg-indigo-600 text-white rounded-lg p-4 text-center">
-    <h3 className="text-lg font-bold">
-      LinkedIn
-    </h3>
-
-    <p className="text-3xl">
-      {stats.linkedin}
-    </p>
-  </div>
-
-  <div className="bg-black text-white rounded-lg p-4 text-center">
-    <h3 className="text-lg font-bold">
-      Twitter
-    </h3>
-
-    <p className="text-3xl">
-      {stats.twitter}
-    </p>
-  </div>
-
-  <div className="bg-pink-600 text-white rounded-lg p-4 text-center">
-    <h3 className="text-lg font-bold">
-      Instagram
-    </h3>
-
-    <p className="text-3xl">
-      {stats.instagram}
-    </p>
-  </div>
-
-  <div className="bg-green-600 text-white rounded-lg p-4 text-center">
-    <h3 className="text-lg font-bold">
-      Blog
-    </h3>
-
-    <p className="text-3xl">
-      {stats.blog}
-    </p>
-  </div>
-
-</div>
+  <AnalyticsCards
+  stats={stats}
+/>
 
       {notification && (
 
@@ -355,255 +327,31 @@ const fetchStats =
         "
       >
 
-        <div
-          className="
-            bg-white
-            p-6
-            rounded-lg
-            shadow-md
-          "
-        >
+        <GenerateForm
+  topic={topic}
+  setTopic={setTopic}
+  contentType={contentType}
+  setContentType={setContentType}
+  loading={loading}
+  generateContent={generateContent}
+/>
 
-          <h1
-            className="
-              text-3xl
-              font-bold
-              mb-6
-            "
-          >
-            AI Content Generator
-          </h1>
+      {content && (
 
-          <label
-            className="
-              font-semibold
-            "
-          >
-            Content Type
-          </label>
+  <GeneratedContent
+    content={content}
+    tone={tone}
+    setTone={setTone}
+    loading={loading}
+    rewriteGeneratedContent={rewriteGeneratedContent}
+    downloadTxt={downloadTxt}
+    downloadPdf={downloadPdf}
+  />
 
-          <select
-            value={contentType}
-            onChange={(event) =>
-              setContentType(
-                event.target.value
-              )
-            }
-            className="
-              w-full
-              border
-              p-3
-              rounded
-              mb-4
-              mt-2
-            "
-          >
-
-            <option value="linkedin">
-              LinkedIn Post
-            </option>
-
-            <option value="twitter">
-              Twitter/X Post
-            </option>
-
-            <option value="instagram">
-              Instagram Caption
-            </option>
-
-            <option value="blog">
-              Blog Outline
-            </option>
-
-          </select>
-
-          <label
-            className="
-              font-semibold
-            "
-          >
-            Topic
-          </label>
-
-          <input
-            type="text"
-            placeholder="Enter topic..."
-            value={topic}
-            onChange={(event) =>
-              setTopic(
-                event.target.value
-              )
-            }
-            className="
-              w-full
-              border
-              p-3
-              rounded
-              mb-4
-              mt-2
-            "
-          />
-
-          <button
-            onClick={generateContent}
-            disabled={loading}
-            className="
-              bg-blue-600
-              text-white
-              px-5
-              py-3
-              rounded
-              hover:bg-blue-700
-              disabled:bg-gray-400
-              disabled:cursor-not-allowed
-            "
-          >
-            {
-              loading
-                ? "Generating..."
-                : "Generate Content"
-            }
-          </button>
-
-        </div>
-
-        {content && (
-
-          <div
-            className="
-              bg-white
-              mt-6
-              p-6
-              rounded-lg
-              shadow-md
-              "
-            >
-            
-
-            <h2
-  className="
-    text-2xl
-    font-semibold
-    mb-4
-  "
->
-  Generated Content
-</h2>
-
-<div
-  className="
-    mb-4
-  "
->
-
-  <label
-    className="
-      font-semibold
-    "
-  >
-    Rewrite Tone
-  </label>
-
-  <select
-    value={tone}
-    onChange={(event) =>
-      setTone(
-        event.target.value
-      )
-    }
-    className="
-      w-full
-      border
-      rounded
-      p-3
-      mt-2
-      mb-4
-    "
-  >
-
-    <option value="professional">
-      Professional
-    </option>
-
-    <option value="casual">
-      Casual
-    </option>
-
-    <option value="friendly">
-      Friendly
-    </option>
-
-    <option value="persuasive">
-      Persuasive
-    </option>
-
-  </select>
-
-</div>
-
-<pre
-  className="
-    whitespace-pre-wrap
-  "
->
-  {content}
-</pre>
-
-<button
-  onClick={rewriteGeneratedContent}
-  disabled={loading}
-  className="
-    mt-4
-    bg-purple-600
-    text-white
-    px-5
-    py-2
-    rounded
-    hover:bg-purple-700
-    disabled:bg-gray-400
-  "
->
-  {
-    loading
-      ? "Rewriting..."
-      : "Rewrite Content"
-  }
-</button>
-<button
-  onClick={downloadTxt}
-  className="
-    mt-3
-    ml-3
-    bg-green-600
-    text-white
-    px-5
-    py-2
-    rounded
-    hover:bg-green-700
-  "
->
-  Download TXT
-</button>
-<button
-  onClick={downloadPdf}
-  className="
-    mt-3
-    ml-3
-    bg-red-600
-    text-white
-    px-5
-    py-2
-    rounded
-    hover:bg-red-700
-  "
->
-  Download PDF
-</button>
-
-          </div>
-
-        )}
-
+)}
+       <RecentActivity
+  recentContent={recentContent}
+/>
       </div>
 
     </div>

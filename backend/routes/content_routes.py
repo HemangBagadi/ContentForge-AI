@@ -126,6 +126,38 @@ def dashboard_stats(
 
     }
 
+@router.get("/recent-content")
+def recent_content(
+    current_user=Depends(get_current_user)
+):
+    """
+    Return the latest 5 generated contents.
+    """
+
+    contents = content_collection.find(
+        {
+            "user_email": current_user["email"]
+        }
+    ).sort(
+        "created_at",
+        -1
+    ).limit(5)
+
+    result = []
+
+    for content in contents:
+
+        result.append(
+            {
+                "id": str(content["_id"]),
+                "topic": content["topic"],
+                "content_type": content["content_type"],
+                "created_at": content["created_at"]
+            }
+        )
+
+    return result
+
 
 @router.get("/content-history")
 def get_content_history(
