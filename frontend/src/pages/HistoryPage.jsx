@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 
+
+import HistoryList from "../components/HistoryList";
+import ContentViewer from "../components/ContentViewer";
 import Navbar from "../components/Navbar";
 import api from "../api/api";
 
@@ -428,75 +431,10 @@ return (
 
         </div>
 
-        {selectedContent && (
-
-          <div
-            className="
-              bg-white
-              mt-8
-              p-6
-              rounded-lg
-              shadow-md
-            "
-          >
-
-            <div
-              className="
-                flex
-                justify-between
-                items-center
-                mb-4
-              "
-            >
-
-              <h2
-                className="
-                  text-2xl
-                  font-bold
-                "
-              >
-                Full Content
-              </h2>
-
-              <button
-                onClick={copyContent}
-                className="
-                  bg-green-600
-                  text-white
-                  px-4
-                  py-2
-                  rounded
-                  hover:bg-green-700
-                "
-              >
-                Copy Content
-              </button>
-
-            </div>
-
-            <h3
-              className="
-                text-xl
-                font-semibold
-                mb-4
-              "
-            >
-              {selectedContent.topic}
-            </h3>
-
-            <pre
-              className="
-                whitespace-pre-wrap
-              "
-            >
-              {
-                selectedContent.generated_content
-              }
-            </pre>
-
-          </div>
-
-        )}
+       <ContentViewer
+  selectedContent={selectedContent}
+  copyContent={copyContent}
+/>
 
       </div>
 
