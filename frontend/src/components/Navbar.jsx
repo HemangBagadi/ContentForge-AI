@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useContext } from "react";
 
 import { AuthContext } from "../context/AuthContext";
@@ -6,6 +6,8 @@ import { AuthContext } from "../context/AuthContext";
 function Navbar() {
 
   const navigate = useNavigate();
+
+  const location = useLocation();
 
   const { logout } =
     useContext(AuthContext);
@@ -21,69 +23,155 @@ function Navbar() {
   return (
 
     <nav
+  className="
+    sticky
+    top-0
+    z-50
+    bg-white/80
+    backdrop-blur-xl
+    border-b
+    border-slate-200
+    px-8
+    py-4
+    flex
+    justify-between
+    items-center
+  "
+>
+
+  {/* Logo */}
+
+  <div
+    className="
+      flex
+      items-center
+      gap-3
+    "
+  >
+
+    <div
       className="
-        bg-slate-900
-        text-white
-        px-6
-        py-4
+        w-12
+        h-12
+        rounded-2xl
+        bg-gradient-to-r
+        from-blue-600
+        to-purple-600
         flex
-        justify-between
         items-center
-        shadow-md
+        justify-center
+        text-white
+        font-bold
+        text-xl
       "
     >
+      C
+    </div>
+
+    <div>
 
       <h1
         className="
-          text-2xl
+          text-xl
           font-bold
+          text-slate-800
         "
       >
         ContentForge AI
       </h1>
 
-      <div
+      <p
         className="
-          flex
-          gap-4
-          items-center
+          text-xs
+          text-gray-500
         "
       >
+        AI Content Platform
+      </p>
 
-        <Link
-          to="/dashboard"
-          className="
-            hover:text-blue-400
-          "
-        >
-          Dashboard
-        </Link>
+    </div>
 
-        <Link
-          to="/history"
-          className="
-            hover:text-blue-400
-          "
-        >
-          History
-        </Link>
+  </div>
 
-        <button
-          onClick={handleLogout}
-          className="
-            bg-red-500
-            px-3
-            py-1
-            rounded
-            hover:bg-red-600
-          "
-        >
-          Logout
-        </button>
+  {/* Navigation */}
 
-      </div>
+  <div
+    className="
+      flex
+      items-center
+      gap-8
+    "
+  >
 
-    </nav>
+    <Link
+      to="/dashboard"
+      className={`
+        font-medium
+        transition
+        hover:text-blue-600
+        ${
+          location.pathname === "/dashboard"
+            ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+            : "text-gray-700"
+        }
+      `}
+    >
+      Dashboard
+    </Link>
+
+    <Link
+      to="/history"
+      className={`
+        font-medium
+        transition
+        hover:text-blue-600
+        ${
+          location.pathname === "/history"
+            ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+            : "text-gray-700"
+        }
+      `}
+    >
+      History
+    </Link>
+
+    <Link
+      to="/profile"
+      className={`
+        font-medium
+        transition
+        hover:text-blue-600
+        ${
+          location.pathname === "/profile"
+            ? "text-blue-600 border-b-2 border-blue-600 pb-1"
+            : "text-gray-700"
+        }
+      `}
+    >
+      Profile
+    </Link>
+
+    <button
+      onClick={handleLogout}
+      className="
+        bg-gradient-to-r
+        from-red-500
+        to-rose-600
+        text-white
+        px-5
+        py-2
+        rounded-xl
+        shadow-lg
+        hover:scale-105
+        transition-all
+      "
+    >
+      Logout
+    </button>
+
+  </div>
+
+</nav>
 
   );
 

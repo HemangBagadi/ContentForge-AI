@@ -4,6 +4,7 @@ import {
   Route
 } from "react-router-dom";
 
+import ProfilePage from "./pages/ProfilePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
@@ -50,6 +51,15 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
 
       </Routes>
 

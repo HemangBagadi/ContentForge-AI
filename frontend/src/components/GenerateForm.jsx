@@ -14,28 +14,76 @@ function GenerateForm({
   return (
 
     <div
+  className="
+    bg-white/90
+    backdrop-blur-lg
+    border
+    border-white/40
+    rounded-3xl
+    shadow-2xl
+    p-10
+    transition-all
+    duration-300
+    hover:shadow-blue-200
+  "
+>
+
+      <div
+  className="
+    flex
+    items-center
+    gap-4
+    mb-8
+  "
+>
+
+  <div
+    className="
+      w-16
+      h-16
+      rounded-2xl
+      bg-gradient-to-r
+      from-blue-500
+      to-purple-600
+      flex
+      items-center
+      justify-center
+      text-3xl
+      text-white
+    "
+  >
+    ✨
+  </div>
+
+  <div>
+
+    <h1
       className="
-        bg-white
-        p-6
-        rounded-lg
-        shadow-md
+        text-4xl
+        font-bold
       "
     >
+      AI Content Generator
+    </h1>
 
-      <h1
-        className="
-          text-3xl
-          font-bold
-          mb-6
-        "
-      >
-        AI Content Generator
-      </h1>
+    <p
+      className="
+        text-gray-500
+        mt-1
+      "
+    >
+      Create professional content powered by Gemini AI.
+    </p>
+
+  </div>
+
+</div>
 
       <label
         className="
-          font-semibold
-        "
+  font-semibold
+  text-gray-700
+"
       >
         Content Type
       </label>
@@ -48,13 +96,18 @@ function GenerateForm({
           )
         }
         className="
-          w-full
-          border
-          p-3
-          rounded
-          mb-4
-          mt-2
-        "
+  w-full
+  rounded-xl
+  border
+  border-gray-200
+  p-4
+  mt-2
+  mb-6
+  focus:ring-4
+  focus:ring-blue-100
+  focus:border-blue-500
+  transition
+"
       >
 
         <option value="linkedin">
@@ -77,8 +130,9 @@ function GenerateForm({
 
       <label
         className="
-          font-semibold
-        "
+  font-semibold
+  text-gray-700
+"
       >
         Topic
       </label>
@@ -93,34 +147,45 @@ function GenerateForm({
           )
         }
         className="
-          w-full
-          border
-          p-3
-          rounded
-          mb-4
-          mt-2
-        "
+  w-full
+  rounded-xl
+  border
+  border-gray-200
+  p-4
+  mt-2
+  mb-6
+  focus:ring-4
+  focus:ring-blue-100
+  focus:border-blue-500
+  transition
+"
       />
 
       <button
         onClick={generateContent}
         disabled={loading}
         className="
-          bg-blue-600
-          text-white
-          px-5
-          py-3
-          rounded
-          hover:bg-blue-700
-          disabled:bg-gray-400
-          disabled:cursor-not-allowed
-        "
+  bg-gradient-to-r
+  from-blue-600
+  to-purple-600
+  text-white
+  px-8
+  py-4
+  rounded-xl
+  font-semibold
+  shadow-lg
+  hover:scale-105
+  hover:shadow-xl
+  transition-all
+  duration-300
+  disabled:opacity-50
+"
       >
         {
-          loading
-            ? "Generating..."
-            : "Generate Content"
-        }
+  loading
+    ? "Generating..."
+    : "✨ Generate Content"
+}
       </button>
 
     </div>

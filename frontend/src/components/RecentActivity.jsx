@@ -4,82 +4,175 @@ function RecentActivity({ recentContent }) {
 
     <div
       className="
-        bg-white
-        mt-6
-        p-6
-        rounded-lg
-        shadow-md
+        bg-white/90
+        backdrop-blur-lg
+        rounded-3xl
+        shadow-xl
+        border
+        border-slate-200
+        p-8
       "
     >
 
-      <h2
+      <div
         className="
-          text-2xl
-          font-bold
-          mb-4
+          flex
+          justify-between
+          items-center
+          mb-6
         "
       >
-        Recent Activity
-      </h2>
+
+        <h2
+          className="
+            text-3xl
+            font-bold
+            text-slate-800
+          "
+        >
+          Recent Activity
+        </h2>
+
+        <span
+          className="
+            text-sm
+            text-gray-400
+          "
+        >
+          Last 5 Posts
+        </span>
+
+      </div>
 
       {
+
         recentContent.length === 0 ? (
 
-          <p
+          <div
             className="
-              text-gray-500
+              text-center
+              py-12
             "
           >
-            No recent content.
-          </p>
+
+            <div
+              className="
+                text-5xl
+                mb-3
+              "
+            >
+              📭
+            </div>
+
+            <p
+              className="
+                text-gray-500
+              "
+            >
+              No recent content yet.
+            </p>
+
+          </div>
 
         ) : (
 
-          recentContent.map((item) => (
+          <div
+            className="
+              space-y-4
+            "
+          >
 
-            <div
-              key={item.id}
-              className="
-                border-b
-                py-3
-              "
-            >
+            {
 
-              <h3
-                className="
-                  font-semibold
-                "
-              >
-                {item.topic}
-              </h3>
+              recentContent.map((item) => (
 
-              <p
-                className="
-                  text-sm
-                  text-gray-500
-                "
-              >
-                {item.content_type}
-              </p>
+                <div
+                  key={item.id}
+                  className="
+                    flex
+                    justify-between
+                    items-center
+                    bg-slate-50
+                    rounded-2xl
+                    p-3
+                    hover:bg-slate-100
+                    transition
+                  "
+                >
 
-              <p
-                className="
-                  text-xs
-                  text-gray-400
-                "
-              >
-                {
-                  new Date(
-                    item.created_at
-                  ).toLocaleString()
-                }
-              </p>
+                  <div>
 
-            </div>
+                    <span
+                      className={`
+                        inline-block
+                        px-3
+                        py-1
+                        rounded-full
+                        text-xs
+                        font-semibold
+                        text-white
 
-          ))
+                        ${
+                          item.content_type === "linkedin"
+                            ? "bg-blue-600"
+                            : item.content_type === "twitter"
+                            ? "bg-black"
+                            : item.content_type === "instagram"
+                            ? "bg-pink-600"
+                            : "bg-green-600"
+                        }
+                      `}
+                    >
+                      {item.content_type.toUpperCase()}
+                    </span>
+
+                    <h3
+                      className="
+                        mt-2
+                        font-bold
+                        text-lg
+                        text-slate-800
+                      "
+                    >
+                      {item.topic}
+                    </h3>
+
+                    <p
+                      className="
+                        text-sm
+                        text-gray-500
+                        mt-1
+                      "
+                    >
+                      🕒 {new Date(item.created_at).toLocaleString()}
+                    </p>
+
+                  </div>
+
+                  <div
+                    className="
+                      text-3xl
+                    "
+                  >
+                    {item.content_type === "linkedin"
+                      ? "💼"
+                      : item.content_type === "twitter"
+                      ? "🐦"
+                      : item.content_type === "instagram"
+                      ? "📷"
+                      : "📝"}
+                  </div>
+
+                </div>
+
+              ))
+
+            }
+
+          </div>
 
         )
+
       }
 
     </div>

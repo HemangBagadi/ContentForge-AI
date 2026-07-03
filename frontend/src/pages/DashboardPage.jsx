@@ -1,5 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
+import QuickActions from "../components/QuickActions";
+import Notification from "../components/Notification";
 import RecentActivity from "../components/RecentActivity";
 import GeneratedContent from "../components/GeneratedContent";
 import GenerateForm from "../components/GenerateForm";
@@ -43,6 +45,8 @@ function DashboardPage() {
 
   const [tone, setTone] =
   useState("professional");
+
+  const generatorRef = useRef(null);
 
   useEffect(() => {
 
@@ -293,50 +297,158 @@ const fetchStats =
 
 
     <div
-      className="
-        min-h-screen
-        bg-slate-100
-      "
-    >
+  className="
+    min-h-screen
+    bg-gradient-to-br
+    from-slate-50
+    via-blue-50
+    to-purple-100
+  "
+>
 
       <Navbar />
   <AnalyticsCards
   stats={stats}
 />
+<div
+  className="
+    max-w-6xl
+    mx-auto
+    px-6
+    mt-2
+    mb-8
+  "
+>
 
-      {notification && (
+  <div
+    className="
+      bg-gradient-to-r
+      from-blue-600
+      to-purple-600
+      rounded-3xl
+      shadow-xl
+      text-white
+      p-10
+      flex
+      justify-between
+      items-center
+    "
+  >
 
-        <div
-          className="
-            bg-green-600
-            text-white
-            text-center
-            py-3
-          "
-        >
-          {notification}
-        </div>
+    <div>
 
-      )}
-
-      <div
+      <h1
         className="
-          max-w-4xl
-          mx-auto
-          p-6
+          text-4xl
+          font-bold
         "
       >
+        Welcome back 👋
+      </h1>
 
-        <GenerateForm
-  topic={topic}
-  setTopic={setTopic}
-  contentType={contentType}
-  setContentType={setContentType}
-  loading={loading}
-  generateContent={generateContent}
+      <p
+        className="
+          text-lg
+          mt-3
+          text-blue-100
+        "
+      >
+        Write LinkedIn posts, Instagram captions,
+Twitter threads and blog outlines with AI.
+      </p>
+
+      <button
+  onClick={() =>
+    generatorRef.current?.scrollIntoView({
+      behavior: "smooth"
+    })
+  }
+  className="
+    mt-6
+    bg-white
+    text-blue-700
+    px-6
+    py-3
+    rounded-xl
+    font-semibold
+    hover:scale-105
+    transition
+  "
+>
+  ✨ Start Creating
+</button>
+
+    </div>
+    
+
+    <div
+      className="
+        hidden
+        md:block
+        text-8xl
+      "
+    >
+      🤖
+    </div>
+
+  </div>
+
+</div>
+
+      <Notification
+  message={notification}
 />
 
-      {content && (
+      <div
+  className="
+    max-w-7xl
+    mx-auto
+    px-6
+    pb-10
+  "
+>
+
+        <div
+  className="
+    grid
+    lg:grid-cols-3
+    gap-8
+    mt-8
+  "
+>
+
+  <div
+    className="
+      lg:col-span-2
+    "
+  >
+
+    <div ref={generatorRef}>
+
+  <GenerateForm
+    topic={topic}
+    setTopic={setTopic}
+    contentType={contentType}
+    setContentType={setContentType}
+    loading={loading}
+    generateContent={generateContent}
+  />
+
+</div>
+
+  </div>
+
+  <div>
+
+    <RecentActivity
+      recentContent={recentContent}
+    />
+
+  </div>
+
+</div>
+
+{content && (
 
   <GeneratedContent
     content={content}
@@ -349,9 +461,6 @@ const fetchStats =
   />
 
 )}
-       <RecentActivity
-  recentContent={recentContent}
-/>
       </div>
 
     </div>

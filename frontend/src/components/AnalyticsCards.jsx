@@ -1,158 +1,136 @@
 function AnalyticsCards({ stats }) {
 
+  const cards = [
+
+    {
+      title: "Total Posts",
+      value: stats.total,
+      icon: "📄",
+      gradient: "from-blue-500 to-cyan-500"
+    },
+
+    {
+      title: "LinkedIn",
+      value: stats.linkedin,
+      icon: "💼",
+      gradient: "from-indigo-500 to-blue-600"
+    },
+
+    {
+      title: "Twitter/X",
+      value: stats.twitter,
+      icon: "🐦",
+      gradient: "from-slate-700 to-black"
+    },
+
+    {
+      title: "Instagram",
+      value: stats.instagram,
+      icon: "📷",
+      gradient: "from-pink-500 to-purple-500"
+    },
+
+    {
+      title: "Blog",
+      value: stats.blog,
+      icon: "📝",
+      gradient: "from-green-500 to-emerald-600"
+    }
+
+  ];
+
   return (
 
     <div
       className="
-        max-w-6xl
+        max-w-7xl
         mx-auto
         grid
         grid-cols-2
-        md:grid-cols-5
-        gap-4
-        p-6
+        lg:grid-cols-5
+        gap-6
+        px-6
+        pt-6
       "
     >
 
-      <div
-        className="
-          bg-blue-600
-          text-white
-          rounded-lg
-          p-4
-          text-center
-        "
-      >
-        <h3
-          className="
-            text-lg
-            font-bold
-          "
-        >
-          Total
-        </h3>
+      {
 
-        <p
-          className="
-            text-3xl
-          "
-        >
-          {stats.total}
-        </p>
+        cards.map((card) => (
 
-      </div>
+          <div
+            key={card.title}
+            className={`
+              bg-gradient-to-br
+              ${card.gradient}
+              rounded-3xl
+              p-6
+              text-white
+              shadow-xl
+              hover:-translate-y-2
+              hover:shadow-2xl
+              transition-all
+              duration-300
+              cursor-pointer
+            `}
+          >
 
-      <div
-        className="
-          bg-indigo-600
-          text-white
-          rounded-lg
-          p-4
-          text-center
-        "
-      >
-        <h3
-          className="
-            text-lg
-            font-bold
-          "
-        >
-          LinkedIn
-        </h3>
+            <div
+              className="
+                flex
+                justify-between
+                items-start
+              "
+            >
 
-        <p
-          className="
-            text-3xl
-          "
-        >
-          {stats.linkedin}
-        </p>
+              <div>
 
-      </div>
+                <p
+                  className="
+                    text-white/80
+                    text-sm
+                  "
+                >
+                  {card.title}
+                </p>
 
-      <div
-        className="
-          bg-black
-          text-white
-          rounded-lg
-          p-4
-          text-center
-        "
-      >
-        <h3
-          className="
-            text-lg
-            font-bold
-          "
-        >
-          Twitter
-        </h3>
+                <h2
+                  className="
+                    text-4xl
+                    font-bold
+                    mt-3
+                  "
+                >
+                  {card.value}
+                </h2>
 
-        <p
-          className="
-            text-3xl
-          "
-        >
-          {stats.twitter}
-        </p>
+              </div>
 
-      </div>
+              <div
+                className="
+                  text-5xl
+                "
+              >
+                {card.icon}
+              </div>
 
-      <div
-        className="
-          bg-pink-600
-          text-white
-          rounded-lg
-          p-4
-          text-center
-        "
-      >
-        <h3
-          className="
-            text-lg
-            font-bold
-          "
-        >
-          Instagram
-        </h3>
+            </div>
 
-        <p
-          className="
-            text-3xl
-          "
-        >
-          {stats.instagram}
-        </p>
+            <div
+              className="
+                mt-6
+                text-white/80
+                text-sm
+              "
+            >
+              AI Generated Content
+            </div>
 
-      </div>
+          </div>
 
-      <div
-        className="
-          bg-green-600
-          text-white
-          rounded-lg
-          p-4
-          text-center
-        "
-      >
-        <h3
-          className="
-            text-lg
-            font-bold
-          "
-        >
-          Blog
-        </h3>
+        ))
 
-        <p
-          className="
-            text-3xl
-          "
-        >
-          {stats.blog}
-        </p>
-
-      </div>
+      }
 
     </div>
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
-
+import Notification from "../components/Notification";
+import LoadingSpinner from "../components/LoadingSpinner";
 import HistoryList from "../components/HistoryList";
 import ContentViewer from "../components/ContentViewer";
 import Navbar from "../components/Navbar";
@@ -183,32 +184,55 @@ const filteredContents =
 return (
 
   <div
-    className="
-      min-h-screen
-      bg-slate-100
-    "
-  >
+  className="
+    min-h-screen
+    relative
+    overflow-hidden
+    bg-gradient-to-br
+    from-blue-50
+    via-white
+    to-purple-100
+  "
+>
 
       <Navbar />
+      <div
+  className="
+    absolute
+    top-20
+    left-10
+    w-96
+    h-96
+    bg-blue-300/30
+    rounded-full
+    blur-[120px]
+    -z-10
+  "
+></div>
 
-      {notification && (
+<div
+  className="
+    absolute
+    right-10
+    top-52
+    w-96
+    h-96
+    bg-purple-300/30
+    rounded-full
+    blur-[120px]
+    -z-10
+  "
+></div>
 
-        <div
-          className="
-            bg-green-500
-            text-white
-            text-center
-            py-3
-          "
-        >
-          {notification}
-        </div>
-
-      )}
+      <Notification
+  message={notification}
+/>
 
       <div
-        className="
-          max-w-5xl
+  className="
+    relative
+    z-10
+    max-w-5xl
           mx-auto
           p-6
         "
@@ -242,10 +266,17 @@ return (
       )
     }
     className="
-      border
-      rounded
-      p-3
-    "
+  w-full
+  rounded-xl
+  border
+  border-slate-200
+  p-4
+  shadow-sm
+  focus:ring-4
+  focus:ring-blue-100
+  focus:border-blue-500
+  transition
+"
   />
 
   <select
@@ -256,10 +287,17 @@ return (
       )
     }
     className="
-      border
-      rounded
-      p-3
-    "
+  w-full
+  rounded-xl
+  border
+  border-slate-200
+  p-4
+  shadow-sm
+  focus:ring-4
+  focus:ring-blue-100
+  focus:border-blue-500
+  transition
+"
   >
 
     <option value="all">
@@ -288,9 +326,7 @@ return (
 
         {loading && (
 
-          <p>
-            Loading...
-          </p>
+          <LoadingSpinner />
 
         )}
 
@@ -298,14 +334,21 @@ return (
   contents.length === 0 && (
 
     <div
-      className="
-        bg-white
-        p-8
-        rounded-lg
-        shadow-md
-        text-center
-      "
-    >
+  key={item.id}
+  className="
+    bg-white/90
+    backdrop-blur-lg
+    border
+    border-slate-200
+    rounded-2xl
+    shadow-lg
+    p-6
+    hover:shadow-xl
+    hover:-translate-y-1
+    transition-all
+    duration-300
+  "
+>
 
       <h2
         className="
@@ -342,87 +385,136 @@ return (
               <div
                 key={item.id}
                 className="
-                  bg-white
-                  p-5
-                  rounded-lg
-                  shadow-md
-                "
+  bg-white/90
+  backdrop-blur-lg
+  rounded-2xl
+  shadow-lg
+  border
+  border-slate-200
+  p-6
+  hover:shadow-xl
+  hover:-translate-y-1
+  transition-all
+  duration-300
+"
               >
 
-                <h3
-                  className="
-                    text-xl
-                    font-semibold
-                  "
-                >
-                  {item.topic}
-                </h3>
-
-                <span
-  className={`
-    inline-block
-    px-3
-    py-1
-    rounded-full
-    text-white
-    text-sm
-    font-semibold
-    mb-4
-
-    ${
-      item.content_type === "linkedin"
-        ? "bg-blue-600"
-        : item.content_type === "twitter"
-        ? "bg-black"
-        : item.content_type === "instagram"
-        ? "bg-pink-600"
-        : "bg-green-600"
-    }
-  `}
+               <div
+  className="
+    flex
+    justify-between
+    items-center
+    gap-6
+  "
 >
-  {item.content_type.toUpperCase()}
-</span>
 
-                <div
-                  className="
-                    flex
-                    gap-3
-                  "
-                >
+  <div
+    className="
+      flex-1
+    "
+  >
 
-                  <button
-                    onClick={() =>
-                      viewContent(item.id)
-                    }
-                    className="
-                      bg-blue-600
-                      text-white
-                      px-4
-                      py-2
-                      rounded
-                      hover:bg-blue-700
-                    "
-                  >
-                    View
-                  </button>
+    <h3
+      className="
+        text-2xl
+        font-bold
+        text-slate-800
+      "
+    >
+      {item.topic}
+    </h3>
 
-                  <button
-                    onClick={() =>
-                      deleteContent(item.id)
-                    }
-                    className="
-                      bg-red-500
-                      text-white
-                      px-4
-                      py-2
-                      rounded
-                      hover:bg-red-600
-                    "
-                  >
-                    Delete
-                  </button>
+    <div
+      className="
+        flex
+        items-center
+        gap-3
+        mt-3
+      "
+    >
 
-                </div>
+      <span
+        className={`
+          inline-flex
+          items-center
+          px-4
+          py-1
+          rounded-full
+          text-sm
+          text-white
+          font-semibold
+
+          ${
+            item.content_type === "linkedin"
+              ? "bg-blue-600"
+              : item.content_type === "twitter"
+              ? "bg-black"
+              : item.content_type === "instagram"
+              ? "bg-pink-600"
+              : "bg-green-600"
+          }
+        `}
+      >
+        {item.content_type.toUpperCase()}
+      </span>
+
+      <span
+        className="
+          text-gray-400
+          text-sm
+        "
+      >
+        📅 {new Date(item.created_at).toLocaleDateString()}
+      </span>
+
+    </div>
+
+  </div>
+
+  <div
+    className="
+      flex
+      gap-3
+    "
+  >
+
+    <button
+      onClick={() =>
+        viewContent(item.id)
+      }
+      className="
+        bg-blue-600
+        text-white
+        px-5
+        py-2
+        rounded-xl
+        hover:bg-blue-700
+        transition
+      "
+    >
+      👁 View
+    </button>
+
+    <button
+      onClick={() =>
+        deleteContent(item.id)
+      }
+      className="
+        bg-red-500
+        text-white
+        px-5
+        py-2
+        rounded-xl
+        hover:bg-red-600
+        transition
+      "
+    >
+      🗑 Delete
+    </button>
+
+  </div>
+
+</div>
 
               </div>
 

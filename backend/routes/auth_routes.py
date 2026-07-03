@@ -8,13 +8,14 @@ Contains:
 
 from fastapi import APIRouter, HTTPException
 
+from datetime import datetime
 from models import UserSignup, UserLogin
 from utils.password import hash_password, verify_password
 from utils.jwt_handler import create_access_token
-from models import UserSignup
 from database import users_collection
-from utils.password import hash_password
-
+from fastapi import Depends
+from database import content_collection
+from utils.auth_middleware import get_current_user
 # Create router
 router = APIRouter()
 
@@ -38,10 +39,11 @@ def signup(user: UserSignup):
 
     # Create user document
     new_user = {
-        "name": user.name,
-        "email": user.email,
-        "password": hash_password(user.password)
-    }
+    "name": user.name,
+    "email": user.email,
+    "password": hash_password(user.password),
+    "created_at": datetime.utcnow()
+}
 
     # Insert into MongoDB
     users_collection.insert_one(new_user)
@@ -87,4 +89,37 @@ def login(user: UserLogin):
     return {
         "access_token": token,
         "token_type": "bearer"
+    }
+@router.get("/profile")
+def get_profile(
+    current_user=Depends(get_current_user)
+):
+    """
+    Get logged-in user's profile.
+    """
+
+    user = users_collection.find_one(
+        {
+            "email": current_user["email"]
+        }
+    )
+
+    if not user:
+        raise HTTPException(
+            status_code=404,
+            detail="User not found"
+        )
+
+    posts_generated = content_collection.count_documents(
+        {
+            "user_email": current_user["email"]
+        }
+    )
+
+    return {
+        "name": user["name"],
+        "email": user["email"],
+        "member_since": user.get("created_at"),
+        "posts_generated": posts_generated,
+        "ai_model": "Gemini 2.5 Flash"
     }
